@@ -1,1 +1,319 @@
-index html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historian Stream - The Ancient Codex of Time</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Old+Standard+TT:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        /* Globalne style */
+        body {
+            font-family: 'Old Standard TT', serif;
+            background-color: #f0e6d6; /* Delikatny pergamin */
+            color: #4a3a2c; /* Atrament */
+            margin: 0;
+            padding: 20px; /* Dodatkowy padding, żeby "księga" nie przylegała do krawędzi ekranu */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Treść zaczyna się od góry, pozwala na scroll */
+            min-height: 100vh;
+            overflow-y: auto; /* Zezwól na przewijanie w pionie */
+            overflow-x: hidden; /* Zapobiega poziomemu przewijaniu */
+            position: relative;
+            perspective: 1000px; /* Dla efektu 3D transformacji */
+        }
+
+        /* Tło - delikatna tekstura papieru */
+        body::before {
+            content: '';
+            position: fixed; /* Fixed, żeby tło się nie przewijało z treścią */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48ZyBmaWxsPSIjYmQ5YTRkIiBvcGFjaXR5PSIuMDgiPjxwYXRoIGQ9Ik0zNiAzNHYxMmMwIC41NS0uNDUgMS0xIDFoLTJjLS41NSAwLTEtLjQ1LTEtMXYtOWMwLS41NS40NS0xIDEtMSAxIDEgMCAwIDEgMSAwdi0yYzAtLjU1LS40NS0xLTEtMSAxIDEgMCAwIDEtMS0xdjljMC0uNTUuNDUtMSAxLTYgLjU1LS40NS0xLS41NS0xLTF2LTFjLTUuNTYgMC0xMCA0LjQ0LTEwIDkuOTR2LjA2YzAgNS41IDEwIDkuOSAxMCA5LjlzLTYuNDggMy0xMCAzLTEwLTQuNC0xMC05Ljl2MC0uMDZjMC01LjUgNC40NC0xMCAxMC0xMHMxMC00LjQ0IDEwLTkuOTR2Ny4wNnMwIDEgMCAxdjJjMCAuNTUuNDUtMSAxLTEgMSAxIDAgMCAxIC0xLTF2MmIwIC41NS40NSAxLTEgMSAxIDEgMCAwIDEtMS0xdjItYzAgLjU1LjQ1LTEgMS0xcy0xLS40NS0xLTF2LTJjMC0uNTUuNDUtMSAxLTFzLTEtLjQ1LTEtMXYtMnYzYzAgLjU1LjQ1LTEgMS0xczEtLjQ1LTEtMXYtM2MwLS41NS40NS0xIDEtMXMtMS0uNDUtMS0xdi0yIi8+PHBhdG8gZD0ibTI3Ljk5OSAxMi4wMTdsLTMuOTk4IDEuMDAybDMuOTk4IDEuMDAyIDIuNzYtNy4yNzJjLjQ2LTEuMTggMi41OS00Ljc0MiAyLjU5LTQuNzQyLTMuNDggMC0yLjUyIDMtNSAwbC0xLjM2MiAzLjQwNWwtMy45OTYtMGwtLjAwMiIvPjwvZz48L2c+PC9zdmc+');
+            background-repeat: repeat;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Kontener Księgi - Otwarta Księga */
+        .book-wrapper {
+            width: 90%;
+            max-width: 960px; /* Szeroka otwarta księga */
+            /* usunięto height: 600px; */
+            background-color: #fdf5e6; /* Jasne strony */
+            border: 15px solid #5a2e12; /* Gruba, ciemna oprawa */
+            border-radius: 8px;
+            box-shadow: 25px 25px 50px rgba(0, 0, 0, 0.7); /* Głęboki cień */
+            position: relative;
+            display: flex;
+            transform-style: preserve-3d; /* Dla efektu 3D transformacji */
+            transition: transform 1s ease-out; /* Animacja otwierania */
+            animation: openBook 2s ease-out forwards; /* Animacja otwierania przy starcie */
+            padding-bottom: 80px; /* Dodatkowy padding na dole dla CTA */
+        }
+
+        @keyframes openBook {
+            0% { transform: rotateY(90deg); opacity: 0; }
+            100% { transform: rotateY(0deg); opacity: 1; }
+        }
+
+        /* Lewa strona księgi */
+        .book-page.left, .book-page.right {
+            flex: 1;
+            padding: 40px;
+            box-sizing: border-box;
+            /* usunięto overflow: hidden; aby treść mogła być większa */
+            position: relative;
+            border-right: 1px solid rgba(0, 0, 0, 0.1); /* Delikatna linia środkowa */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Treść zaczyna się od góry */
+            align-items: center;
+        }
+
+        .book-page.right {
+            border-right: none; /* Prawa strona nie ma linii */
+            border-left: 1px solid rgba(0, 0, 0, 0.1); /* Delikatna linia środkowa */
+        }
+
+        /* Dekoracyjne marginesy/ramki na stronie */
+        .page-border {
+            border: 1px solid #d4b49e;
+            padding: 20px;
+            width: 100%; /* Wypełnia dostępną przestrzeń flex */
+            box-sizing: border-box;
+            position: relative;
+            text-align: center; /* Wyśrodkowanie treści w ramce */
+        }
+
+        /* Tytuł kanału na lewej stronie */
+        .channel-title {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 3.8em;
+            color: #6a0000; /* Głęboka czerwień */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+            line-height: 1.1;
+            animation: fadeInText 1.5s ease-out 1.5s forwards; /* Opóźnione pojawienie */
+            opacity: 0;
+        }
+
+        /* Slogan na lewej stronie */
+        .tagline {
+            font-family: 'Old Standard TT', serif;
+            font-size: 1.6em;
+            font-style: italic;
+            color: #5a2e12;
+            margin-bottom: 30px;
+            animation: fadeInText 1.5s ease-out 1.8s forwards;
+            opacity: 0;
+        }
+
+        /* Krótki opis na lewej stronie */
+        .short-description {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            animation: fadeInText 1.5s ease-out 2.1s forwards;
+            opacity: 0;
+            text-align: justify; /* Wyrównanie do lewej i prawej */
+            max-width: 400px; /* Ogranicz szerokość tekstu dla lepszej czytelności */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Grafika na prawej stronie */
+        .main-illustration {
+            width: 100%;
+            height: auto; /* Pozwala na dynamiczną wysokość */
+            max-height: 500px; /* Maksymalna wysokość, żeby nie była zbyt duża na desktopie */
+            object-fit: contain; /* Obrazek będzie widoczny w całości, bez przycinania */
+            border: 4px solid #6a0000; /* Ramka grafiki */
+            box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.5s ease-in-out;
+            animation: scaleIn 1.5s ease-out 2s forwards; /* Animacja pojawiania się */
+            opacity: 0;
+        }
+
+        .main-illustration:hover {
+            transform: scale(1.02); /* Lekkie powiększenie */
+        }
+
+        /* Link do YouTube na dole */
+        .youtube-cta {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: fit-content;
+            animation: fadeInText 1.5s ease-out 2.5s forwards;
+            opacity: 0;
+            z-index: 2; /* Nad resztą, żeby był klikalny */
+        }
+
+        .youtube-cta a {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 1.8em;
+            color: #c4302b; /* YouTube Red */
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 30px;
+            border: 4px solid #c4302b;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8); /* Lekkie tło dla czytelności */
+            transition: all 0.3s ease-in-out;
+            display: inline-block;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .youtube-cta a:hover {
+            background-color: #c4302b;
+            color: white;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Animacje dla elementów tekstowych */
+        @keyframes fadeInText {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Efekt "starego kurzu" / migotania tła */
+        .dust-particle {
+            position: absolute;
+            background-color: rgba(189, 154, 77, 0.3); /* Złoty brąz */
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            animation: floatAndFade 20s infinite ease-in-out;
+            filter: blur(0.5px);
+            z-index: 0;
+        }
+
+        /* Dynamiczne pozycjonowanie i rozmiar "kurzu" */
+        .dust-particle:nth-child(1) { width: 8px; height: 8px; top: 10%; left: 15%; animation-delay: 0s; }
+        .dust-particle:nth-child(2) { width: 12px; height: 12px; top: 70%; left: 80%; animation-delay: 3s; }
+        .dust-particle:nth-child(3) { width: 6px; height: 6px; top: 40%; left: 50%; animation-delay: 6s; }
+        .dust-particle:nth-child(4) { width: 10px; height: 10px; top: 25%; left: 5%; animation-delay: 9s; }
+        .dust-particle:nth-child(5) { width: 7px; height: 7px; top: 85%; left: 30%; animation-delay: 12s; }
+
+        @keyframes floatAndFade {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0; }
+            100% { transform: translateY(-150px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Responsywność */
+        @media (max-width: 992px) {
+            .book-wrapper {
+                flex-direction: column; /* Strony układają się jedna pod drugą */
+                height: auto; /* Wysokość automatyczna */
+                padding: 30px;
+                max-width: 600px; /* Mniejsza maksymalna szerokość */
+            }
+            .book-page.left, .book-page.right {
+                padding: 30px;
+                border-right: none; /* Usuń linie boczne */
+                border-left: none;
+                margin-bottom: 20px; /* Odstęp między "stronami" */
+            }
+            .channel-title {
+                font-size: 3em;
+            }
+            .tagline {
+                font-size: 1.4em;
+            }
+            .short-description {
+                font-size: 1em;
+            }
+            .main-illustration {
+                height: auto; /* Pozwala na swobodne skalowanie */
+                margin-top: 20px; /* Odstęp od tekstu na mobilnym */
+                max-height: none; /* Brak maksymalnej wysokości na mobilnym */
+            }
+            .youtube-cta {
+                position: static; /* Pozycjonowanie statyczne na mobilnym */
+                transform: none;
+                margin-top: 40px;
+            }
+            .youtube-cta a {
+                font-size: 1.4em;
+                padding: 10px 20px;
+                border-width: 3px;
+            }
+            .dust-particle { display: none; } /* Ukryj animacje na mobilnym */
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .book-wrapper {
+                padding: 20px;
+                border-width: 10px;
+                box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.5);
+            }
+            .book-page.left, .book-page.right {
+                padding: 20px;
+            }
+            .channel-title {
+                font-size: 2.2em;
+            }
+            .tagline {
+                font-size: 1.1em;
+            }
+            .short-description {
+                font-size: 0.9em;
+            }
+            .youtube-cta a {
+                font-size: 1.1em;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-wrapper">
+        <div class="book-page left">
+            <div class="page-border">
+                <h1 class="channel-title">Historian Stream</h1>
+                <p class="tagline">Unveiling the Past, One Story at a Time.</p>
+                <p class="short-description">
+                    Step into the **Grand Archive of History** with Historian Stream. We journey through ancient empires, pivotal battles, and monumental discoveries, revealing the captivating sagas that shaped our world. Experience history reimagined, where every tale is vividly brought to life.
+                    <br><br>
+                    Discover the secrets of bygone eras, meet the figures who changed the course of destiny, and explore the intricate threads connecting past to present. From forgotten mythologies to technological marvels, our chronicles offer a unique perspective on the human journey.
+                    <br><br>
+                    Join us as we explore the wisdom, triumphs, and struggles of civilizations long past. Your adventure through time begins here!
+                </p>
+            </div>
+        </div>
+        <div class="book-page right">
+            <div class="page-border">
+                <img src="https://via.placeholder.com/450x500/8b4513/f0e6d6?text=Ancient+Chronicles+Illustration" alt="Ancient Chronicles Illustration" class="main-illustration">
+            </div>
+        </div>
+
+        <div class="youtube-cta">
+            <a href="https://www.youtube.com/@HistorianStream" target="_blank">Watch Our Latest Chronicles on YouTube!</a>
+        </div>
+
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+        <div class="dust-particle"></div>
+    </div>
+
+</body>
+</html>
